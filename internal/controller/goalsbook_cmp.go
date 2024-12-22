@@ -63,5 +63,12 @@ func (r *GoalsbookReconciler) DbConfigMapReconcile(ctx context.Context, req ctrl
 	}
 
 	log.Info("ConfigMap already exists", "ConfigMapName", configMapName)
+
+	// log.Info("ConfigMap has found, Need to be updated", "configMapName", configMapName)
+
+	// if err := r.Status().Update(ctx, configMap); err != nil {
+	// 	log.Error(err, "Error encountered while updating secret: ", configMapName)
+	// 	return err
+	// }
 	return nil
 }

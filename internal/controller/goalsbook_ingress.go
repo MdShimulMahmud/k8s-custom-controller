@@ -104,5 +104,12 @@ func (r *GoalsbookReconciler) GoalsbookIngressReconcile(ctx context.Context, req
 	}
 	log.Info("Ingress already exists, no changes required", "IngressName", ingressName)
 
+	// log.Info("Ingress has found, Need to be updated", "ingressName", ingressName)
+
+	// if err := r.Status().Update(ctx, ingress); err != nil {
+	// 	log.Error(err, "Error encountered while updating secret: ", ingressName)
+	// 	return err
+	// }
+
 	return nil
 }

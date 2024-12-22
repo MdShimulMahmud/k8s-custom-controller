@@ -87,6 +87,15 @@ func (r *GoalsbookReconciler) GoalsbookService(ctx context.Context, req ctrl.Req
 		log.Info("Created new Service", "Service", serviceName)
 		return nil
 	}
+
 	log.Info("Service already exists", "Service", serviceName)
+
+	// log.Info("Service has found, Need to be updated", "serviceName", serviceName)
+
+	// if err := r.Status().Update(ctx, service); err != nil {
+	// 	log.Error(err, "Error encountered while updating secret: ", serviceName)
+	// 	return err
+	// }
+
 	return nil
 }

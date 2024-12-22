@@ -76,5 +76,11 @@ func (r *GoalsbookReconciler) DbSecretReconcile(ctx context.Context, req ctrl.Re
 		return err
 	}
 
+	// log.Info("Secret has found, Need to be updated", "SecretName", secretName)
+
+	// if err := r.Status().Update(ctx, secret); err != nil {
+	// 	log.Error(err, "Error encountered while updating secret: ", secretName)
+	// 	return err
+	// }
 	return nil
 }

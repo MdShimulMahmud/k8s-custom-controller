@@ -71,6 +71,12 @@ func (r *GoalsbookReconciler) GoalsbookPVC(ctx context.Context, req ctrl.Request
 	}
 
 	log.Info("PVC already exists", "PVC", pvcName)
+	// log.Info("PVC has found, Need to be updated", "pvcName", pvcName)
+
+	// if err := r.Status().Update(ctx, pvc); err != nil {
+	// 	log.Error(err, "Error encountered while updating secret: ", pvcName)
+	// 	return err
+	// }
 
 	return nil
 }
