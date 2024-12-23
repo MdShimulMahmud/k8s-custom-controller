@@ -3,6 +3,7 @@
 # It should be run by config/default
 resources:
 - bases/webapp.goals.dev_goalsbooks.yaml
+- bases/webapp.goals.dev_userbooks.yaml
 # +kubebuilder:scaffold:crdkustomizeresource
 
 patches:

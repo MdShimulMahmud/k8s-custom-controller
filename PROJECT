@@ -17,4 +17,13 @@ resources:
   kind: Goalsbook
   path: goals.dev/goalsbook/api/v1
   version: v1
+- api:
+    crdVersion: v1
+    namespaced: true
+  controller: true
+  domain: goals.dev
+  group: webapp
+  kind: Userbook
+  path: goals.dev/goalsbook/api/v1
+  version: v1
 version: "3"
