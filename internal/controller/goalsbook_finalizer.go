@@ -15,7 +15,7 @@ import (
 	controllerutil "sigs.k8s.io/controller-runtime/pkg/controller/controllerutil"
 )
 
-const GuestbookFinalizer = "goals.dev/dev-protection"
+const GuestbookFinalizer = "goals.dev/backend-protection"
 
 func (r *GoalsbookReconciler) AddDeploymentFinalizer(ctx context.Context, req ctrl.Request) error {
 	log := log.FromContext(ctx)

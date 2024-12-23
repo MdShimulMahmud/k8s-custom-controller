@@ -19,86 +19,68 @@ package controller
 import (
 	"context"
 
-	"k8s.io/apimachinery/pkg/api/errors"
+	appsv1 "k8s.io/api/apps/v1"
+	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/types"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/log"
 
-	appsv1 "k8s.io/api/apps/v1"
-	corev1 "k8s.io/api/core/v1"
-
-	// metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-
 	webappv1 "goals.dev/goalsbook/api/v1"
 )
 
-// GoalsbookReconciler reconciles a Goalsbook object
-type GoalsbookReconciler struct {
+// UserbookReconciler reconciles a Userbook object
+type UserbookReconciler struct {
 	client.Client
 	Scheme *runtime.Scheme
 }
 
-// +kubebuilder:rbac:groups=webapp.goals.dev,resources=goalsbooks,verbs=get;list;watch;create;update;patch;delete
-// +kubebuilder:rbac:groups=webapp.goals.dev,resources=goalsbooks/status,verbs=get;update;patch
-// +kubebuilder:rbac:groups=webapp.goals.dev,resources=goalsbooks/finalizers,verbs=update
+// +kubebuilder:rbac:groups=webapp.goals.dev,resources=userbooks,verbs=get;list;watch;create;update;patch;delete
+// +kubebuilder:rbac:groups=webapp.goals.dev,resources=userbooks/status,verbs=get;update;patch
+// +kubebuilder:rbac:groups=webapp.goals.dev,resources=userbooks/finalizers,verbs=update
 
 // Reconcile is part of the main kubernetes reconciliation loop which aims to
 // move the current state of the cluster closer to the desired state.
 // TODO(user): Modify the Reconcile function to compare the state specified by
-// the Goalsbook object against the actual cluster state, and then
+// the Userbook object against the actual cluster state, and then
 // perform operations to make the cluster state reflect the state specified by
 // the user.
 //
 // For more details, check Reconcile and its Result here:
 // - https://pkg.go.dev/sigs.k8s.io/controller-runtime@v0.19.1/pkg/reconcile
-func (r *GoalsbookReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
-
+func (r *UserbookReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
 	log := log.FromContext(ctx)
 
-	goalsbook := &webappv1.Goalsbook{}
+	userbook := &webappv1.Userbook{}
 
-	// Check CRD
 	err := r.Get(ctx, types.NamespacedName{
 		Name:      req.Name,
 		Namespace: req.Namespace,
-	}, goalsbook)
+	}, userbook)
 
 	if err != nil {
-		if !errors.IsNotFound(err) {
-			log.Info("CRD Doesn't Exists")
-			return ctrl.Result{}, err
-		}
-	}
-
-	if err := r.DbSecretReconcile(ctx, req, goalsbook); err != nil {
-		log.Error(err, "Failed to reconcile Secrect")
+		log.Info("CRD not found", userbook)
 		return ctrl.Result{}, err
 	}
 
-	if err := r.DbConfigMapReconcile(ctx, req, goalsbook); err != nil {
-		log.Error(err, "Failed to reconcile ConfigMap")
+	if err = r.UserbookDeploymentReconcile(ctx, req, userbook); err != nil {
+		log.Info("Error Found while creating Userbook deployment", userbook.Name)
 		return ctrl.Result{}, err
 	}
 
-	if err := r.GoalsbookPVC(ctx, req, goalsbook); err != nil {
-		log.Error(err, "Failed to reconcile PVC")
+	if err = r.AddDeploymentFinalizer(ctx, req); err != nil {
+		log.Info("Error Found while adding Userbook Finalizer ", userbook.Name)
 		return ctrl.Result{}, err
 	}
 
-	if err := r.GoalsbookDeployment(ctx, req); err != nil {
-		log.Error(err, "Failed to reconcile Deployment")
+	if err = r.UserbookServiceReconcile(ctx, req, userbook); err != nil {
+		log.Info("Error Found while creating Userbook service", userbook.Name)
 		return ctrl.Result{}, err
 	}
 
-	if err := r.AddDeploymentFinalizer(ctx, req); err != nil {
-		log.Error(err, "Failed to reconcile Deployment Finalizer")
-		return ctrl.Result{}, err
-	}
-
-	if err := r.GoalsbookService(ctx, req, goalsbook); err != nil {
-		log.Error(err, "Failed to reconcile Service")
+	if err := r.GoalsbookIngressReconcile(ctx, req, userbook); err != nil {
+		log.Error(err, "Failed to reconcile Ingress")
 		return ctrl.Result{}, err
 	}
 
@@ -106,14 +88,11 @@ func (r *GoalsbookReconciler) Reconcile(ctx context.Context, req ctrl.Request) (
 }
 
 // SetupWithManager sets up the controller with the Manager.
-func (r *GoalsbookReconciler) SetupWithManager(mgr ctrl.Manager) error {
+func (r *UserbookReconciler) SetupWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewControllerManagedBy(mgr).
-		For(&webappv1.Goalsbook{}).
-		Owns(&corev1.Secret{}).
-		Owns(&corev1.ConfigMap{}).
-		Owns(&corev1.PersistentVolumeClaim{}).
+		For(&webappv1.Userbook{}).
 		Owns(&corev1.Service{}).
 		Owns(&appsv1.Deployment{}).
-		Named("goalsbook").
+		Named("userbook").
 		Complete(r)
 }
