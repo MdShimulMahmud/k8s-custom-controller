@@ -27,7 +27,6 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/log"
 
 	appsv1 "k8s.io/api/apps/v1"
-	corev1 "k8s.io/api/core/v1"
 
 	// metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 
@@ -109,10 +108,6 @@ func (r *GoalsbookReconciler) Reconcile(ctx context.Context, req ctrl.Request) (
 func (r *GoalsbookReconciler) SetupWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewControllerManagedBy(mgr).
 		For(&webappv1.Goalsbook{}).
-		Owns(&corev1.Secret{}).
-		Owns(&corev1.ConfigMap{}).
-		Owns(&corev1.PersistentVolumeClaim{}).
-		Owns(&corev1.Service{}).
 		Owns(&appsv1.Deployment{}).
 		Named("goalsbook").
 		Complete(r)

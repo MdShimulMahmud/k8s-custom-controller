@@ -20,7 +20,6 @@ import (
 	"context"
 
 	appsv1 "k8s.io/api/apps/v1"
-	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/types"
 	ctrl "sigs.k8s.io/controller-runtime"
@@ -91,7 +90,6 @@ func (r *UserbookReconciler) Reconcile(ctx context.Context, req ctrl.Request) (c
 func (r *UserbookReconciler) SetupWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewControllerManagedBy(mgr).
 		For(&webappv1.Userbook{}).
-		Owns(&corev1.Service{}).
 		Owns(&appsv1.Deployment{}).
 		Named("userbook").
 		Complete(r)

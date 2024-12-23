@@ -75,7 +75,7 @@ func (r *GoalsbookReconciler) GoalsbookService(ctx context.Context, req ctrl.Req
 						TargetPort: intstr.FromInt32(goalsbook.Spec.ContainerPort),
 					},
 				},
-				Type: corev1.ServiceTypeLoadBalancer,
+				Type: corev1.ServiceTypeClusterIP,
 			},
 		}
 

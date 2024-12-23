@@ -71,7 +71,7 @@ func (r *UserbookReconciler) UserbookServiceReconcile(ctx context.Context, req c
 						TargetPort: intstr.FromInt32(userbook.Spec.ContainerPort),
 					},
 				},
-				Type: corev1.ServiceTypeLoadBalancer,
+				Type: corev1.ServiceTypeClusterIP,
 			},
 		}
 
