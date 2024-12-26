@@ -51,19 +51,19 @@ spec:
           - name: DATABASE_PASSWORD
             valueFrom:
               secretKeyRef:
-                name: database-secret
+                name: {{ .Chart.Name }}-secret
                 key: password
           - name: DATABASE_USERNAME
             valueFrom:
               secretKeyRef:
-                name: database-secret
+                name: {{ .Chart.Name }}-secret
                 key: username
           - name: DATABASE_URL
             valueFrom:
               configMapKeyRef:
-                name: configmap
+                name: {{ .Chart.Name }}-configmap
                 key: database
       volumes:
         - name: access-log-volume
           persistentVolumeClaim:
-            claimName: test-claim
+            claimName: {{ .Chart.Name }}-pvc-claim
