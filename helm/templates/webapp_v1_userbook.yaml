@@ -1,0 +1,13 @@
+apiVersion: webapp.goals.dev/v1
+kind: Userbook
+metadata:
+  labels:
+    app.kubernetes.io/name: goal-projects-operator
+    app.kubernetes.io/managed-by: kustomize
+  name: frontend-deployment
+spec:
+  revisionHistoryLimit: 1
+  replicas: 1
+  containerName: frontend-container
+  imageName: shimulmahmud/frontend:v1.1.8
+  containerPort: 3000

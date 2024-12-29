@@ -1,0 +1,14 @@
+apiVersion: webapp.goals.dev/v1
+kind: Goalsbook
+metadata:
+  labels:
+    app.kubernetes.io/name: goal-projects-operator
+    app.kubernetes.io/managed-by: kustomize
+    app: backend
+  name: backend-deployment
+spec:
+  revisionHistoryLimit: 1
+  replicas: 1
+  containerName: backend-container
+  imageName: shimulmahmud/backend:v1.1.8
+  containerPort: 5000
