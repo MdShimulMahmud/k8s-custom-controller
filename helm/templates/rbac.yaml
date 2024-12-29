@@ -1,0 +1,235 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  labels:
+    app.kubernetes.io/managed-by: kustomize
+    app.kubernetes.io/name: goal-projects-operator
+  name: goal-projects-operator-controller-manager
+  {{- include "helm.namespace" . | indent 2}}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  labels:
+    app.kubernetes.io/managed-by: kustomize
+    app.kubernetes.io/name: goal-projects-operator
+  name: goal-projects-operator-leader-election-role
+  {{- include "helm.namespace" . | indent 2}}
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - configmaps
+  verbs:
+  - get
+  - list
+  - watch
+  - create
+  - update
+  - patch
+  - delete
+- apiGroups:
+  - coordination.k8s.io
+  resources:
+  - leases
+  verbs:
+  - get
+  - list
+  - watch
+  - create
+  - update
+  - patch
+  - delete
+- apiGroups:
+  - ""
+  resources:
+  - events
+  verbs:
+  - create
+  - patch
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  labels:
+    app.kubernetes.io/managed-by: kustomize
+    app.kubernetes.io/name: goal-projects-operator
+  name: goal-projects-operator-goalsbook-editor-role
+rules:
+- apiGroups:
+  - webapp.goals.dev
+  resources:
+  - goalsbooks
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - webapp.goals.dev
+  resources:
+  - goalsbooks/status
+  verbs:
+  - get
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  labels:
+    app.kubernetes.io/managed-by: kustomize
+    app.kubernetes.io/name: goal-projects-operator
+  name: goal-projects-operator-goalsbook-viewer-role
+rules:
+- apiGroups:
+  - webapp.goals.dev
+  resources:
+  - goalsbooks
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - webapp.goals.dev
+  resources:
+  - goalsbooks/status
+  verbs:
+  - get
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: goal-projects-operator-manager-role
+rules:
+- apiGroups:
+  - '*'
+  resources:
+  - '*'
+  verbs:
+  - '*'
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: goal-projects-operator-metrics-auth-role
+rules:
+- apiGroups:
+  - authentication.k8s.iometrics
+  resources:
+  - tokenreviews
+  verbs:
+  - create
+- apiGroups:
+  - authorization.k8s.io
+  resources:
+  - subjectaccessreviews
+  verbs:
+  - create
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: goal-projects-operator-metrics-reader
+rules:
+- nonResourceURLs:
+  - /metrics
+  verbs:
+  - get
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  labels:
+    app.kubernetes.io/managed-by: kustomize
+    app.kubernetes.io/name: goal-projects-operator
+  name: goal-projects-operator-userbook-editor-role
+rules:
+- apiGroups:
+  - webapp.goals.dev
+  resources:
+  - userbooks
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - webapp.goals.dev
+  resources:
+  - userbooks/status
+  verbs:
+  - get
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  labels:
+    app.kubernetes.io/managed-by: kustomize
+    app.kubernetes.io/name: goal-projects-operator
+  name: goal-projects-operator-userbook-viewer-role
+rules:
+- apiGroups:
+  - webapp.goals.dev
+  resources:
+  - userbooks
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - webapp.goals.dev
+  resources:
+  - userbooks/status
+  verbs:
+  - get
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  labels:
+    app.kubernetes.io/managed-by: kustomize
+    app.kubernetes.io/name: goal-projects-operator
+  name: goal-projects-operator-leader-election-rolebinding
+  {{- include "helm.namespace" . | indent 2}}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: goal-projects-operator-leader-election-role
+subjects:
+- kind: ServiceAccount
+  name: goal-projects-operator-controller-manager
+  {{- include "helm.namespace" . | indent 2}}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  labels:
+    app.kubernetes.io/managed-by: kustomize
+    app.kubernetes.io/name: goal-projects-operator
+  name: goal-projects-operator-manager-rolebinding
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: goal-projects-operator-manager-role
+subjects:
+- kind: ServiceAccount
+  name: goal-projects-operator-controller-manager
+  {{- include "helm.namespace" . | indent 2}}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: goal-projects-operator-metrics-auth-rolebinding
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: goal-projects-operator-metrics-auth-role
+subjects:
+- kind: ServiceAccount
+  name: goal-projects-operator-controller-manager
+  {{- include "helm.namespace" . | indent 2}}

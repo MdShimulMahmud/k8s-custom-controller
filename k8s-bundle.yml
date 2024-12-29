@@ -243,34 +243,12 @@ metadata:
   name: goal-projects-operator-manager-role
 rules:
 - apiGroups:
-  - webapp.goals.dev
+  - '*'
   resources:
-  - goalsbooks
-  - userbooks
+  - '*'
   verbs:
-  - create
-  - delete
-  - get
-  - list
-  - patch
-  - update
-  - watch
-- apiGroups:
-  - webapp.goals.dev
-  resources:
-  - goalsbooks/finalizers
-  - userbooks/finalizers
-  verbs:
-  - update
-- apiGroups:
-  - webapp.goals.dev
-  resources:
-  - goalsbooks/status
-  - userbooks/status
-  verbs:
-  - get
-  - patch
-  - update
+  - '*'
+
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
@@ -278,7 +256,7 @@ metadata:
   name: goal-projects-operator-metrics-auth-role
 rules:
 - apiGroups:
-  - authentication.k8s.iometrics
+  - authentication.k8s.io
   resources:
   - tokenreviews
   verbs:
@@ -458,11 +436,11 @@ spec:
           periodSeconds: 10
         resources:
           limits:
-            cpu: '1'
-            memory: 256Mi
-          requests:
-            cpu: 100m
+            cpu: 500m
             memory: 128Mi
+          requests:
+            cpu: 10m
+            memory: 64Mi
         securityContext:
           allowPrivilegeEscalation: false
           capabilities:

@@ -7,21 +7,15 @@ replicaCount: 1
 
 
 # This sets the container image more information can be found here: https://kubernetes.io/docs/concepts/containers/images/
-frontend:
-  image: shimulmahmud/frontend:v1.0.5
-  port: 3000
-
-backend:
-  image: shimulmahmud/backend:v1.1.8
-  port: 5000
-  secrets:
-    password: akif
-    username: akif
-    database: cluster1.uktxj.mongodb.net/?retryWrites=true&w=majority&appName=Cluster1
-
+controller:
+  image: shimulmahmud/controller:latest
+  
 storageClassName:
   storage: standard
 
+namespace: 
+  create: true 
+  name: goal-projects-operator 
 # This is for the secretes for pulling an image from a private repository more information can be found here: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
 imagePullSecrets: []
 # This is to override the chart name.

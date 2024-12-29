@@ -5,15 +5,11 @@ Expand the name of the chart.
 {{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
-{{- define "backend.Selectors" }}
-app: backend
-type: backend
+
+{{- define "helm.namespace" }}
+namespace: {{ default "goals-ns" .Release.Namespace }}
 {{- end }}
 
-{{- define "frontend.Selectors" }}
-app: frontend
-type: frontend
-{{- end }}
 
 
 {{/*

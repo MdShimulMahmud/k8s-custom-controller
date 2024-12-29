@@ -1,4 +1,3 @@
----
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
@@ -57,6 +56,71 @@ spec:
             type: object
           status:
             description: GoalsbookStatus defines the observed state of Goalsbook.
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.16.4
+  name: userbooks.webapp.goals.dev
+spec:
+  group: webapp.goals.dev
+  names:
+    kind: Userbook
+    listKind: UserbookList
+    plural: userbooks
+    singular: userbook
+  scope: Namespaced
+  versions:
+  - name: v1
+    schema:
+      openAPIV3Schema:
+        description: Userbook is the Schema for the userbooks API.
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: UserbookSpec defines the desired state of Userbook.
+            properties:
+              containerName:
+                type: string
+              containerPort:
+                format: int32
+                type: integer
+              imageName:
+                type: string
+              replicas:
+                format: int32
+                type: integer
+              revisionHistoryLimit:
+                format: int32
+                type: integer
+            required:
+            - containerPort
+            type: object
+          status:
+            description: UserbookStatus defines the observed state of Userbook.
             type: object
         type: object
     served: true
